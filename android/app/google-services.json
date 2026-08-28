@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103847675068",
+    "project_id": "evenline-8a094",
+    "storage_bucket": "evenline-8a094.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103847675068:android:70ffb991336e0b15bdbcb9",
+        "android_client_info": {
+          "package_name": "com.example.evenline_event_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNf3mDfiyIOdE7Ns3H935HGHj-1KSaP2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
