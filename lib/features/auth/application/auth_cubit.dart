@@ -18,9 +18,21 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState(status: AuthStatus.loading));
     try {
       final success = await store.signIn(email, password);
-      emit(success ? const AuthState(status: AuthStatus.success) : const AuthState(status: AuthStatus.failure, message: 'Check your email and password.'));
+      emit(
+        success
+            ? const AuthState(status: AuthStatus.success)
+            : const AuthState(
+                status: AuthStatus.failure,
+                message: 'Check your email and password.',
+              ),
+      );
     } catch (_) {
-      emit(const AuthState(status: AuthStatus.failure, message: 'Unable to sign in. Please try again.'));
+      emit(
+        const AuthState(
+          status: AuthStatus.failure,
+          message: 'Unable to sign in. Please try again.',
+        ),
+      );
     }
   }
 
@@ -28,9 +40,21 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState(status: AuthStatus.loading));
     try {
       final success = await store.signUp(name, email, password);
-      emit(success ? const AuthState(status: AuthStatus.success) : const AuthState(status: AuthStatus.failure, message: 'Complete all fields and use a valid password.'));
+      emit(
+        success
+            ? const AuthState(status: AuthStatus.success)
+            : const AuthState(
+                status: AuthStatus.failure,
+                message: 'Complete all fields and use a valid password.',
+              ),
+      );
     } catch (_) {
-      emit(const AuthState(status: AuthStatus.failure, message: 'Unable to create your account.'));
+      emit(
+        const AuthState(
+          status: AuthStatus.failure,
+          message: 'Unable to create your account.',
+        ),
+      );
     }
   }
 }

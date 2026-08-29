@@ -8,5 +8,9 @@ class TicketSelectionState {
 class TicketSelectionCubit extends Cubit<TicketSelectionState> {
   TicketSelectionCubit() : super(const TicketSelectionState());
   void increment() => emit(TicketSelectionState(quantity: state.quantity + 1));
-  void decrement() { if (state.quantity > 1) emit(TicketSelectionState(quantity: state.quantity - 1)); }
+  void decrement() {
+    if (state.quantity > 1) {
+      emit(TicketSelectionState(quantity: state.quantity - 1));
+    }
+  }
 }

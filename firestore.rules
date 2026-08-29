@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isUser(uid) { return signedIn() && request.auth.uid == uid; }
+    function isOrganizer() { return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'organizer'; }
+    function ownsEvent() { return signedIn() && resource.data.ownerId == request.auth.uid; }
+
+    match /users/{uid} {
+      allow create: if isUser(uid) && request.resource.data.uid == uid && request.resource.data.role == 'attendee';
+      allow read: if isUser(uid) || (signedIn() && isOrganizer() && resource.data.role == 'organizer');
+      allow update: if isUser(uid)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.role == resource.data.role;
+      allow delete: if isUser(uid);
+
+      match /bookings/{bookingId} {
+        allow read: if isUser(uid) || (isOrganizer() && resource.data.eventId is string && get(/databases/$(database)/documents/events/$(resource.data.eventId)).data.ownerId == request.auth.uid);
+        allow create: if isUser(uid) && request.resource.data.eventId is string && request.resource.data.quantity is int && request.resource.data.quantity > 0 && request.resource.data.status == 'issued' && request.resource.data.token is string;
+        allow update: if isUser(uid) && resource.data.status == 'issued' && request.resource.data.status == 'cancelled';
+        allow delete: if isUser(uid) && resource.data.status == 'issued';
+      }
+
+      match /favorites/{eventId} {
+        allow read, write: if isUser(uid);
+      }
+
+      match /following/{organizerId} {
+        allow read, write: if isUser(uid);
+      }
+
+      match /notifications/{notificationId} {
+        allow read, update, delete: if isUser(uid);
+        allow create: if isUser(uid);
+      }
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if isOrganizer() && request.resource.data.ownerId == request.auth.uid && request.resource.data.quantityTotal is int && request.resource.data.quantitySold == 0;
+      allow update: if ownsEvent()
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.quantityTotal == resource.data.quantityTotal
+        && request.resource.data.quantitySold == resource.data.quantitySold;
+      // Booking transactions may only move the counters consistently and by a bounded order size.
+      allow update: if signedIn()
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.quantityTotal == resource.data.quantityTotal
+        && request.resource.data.quantitySold is int
+        && resource.data.quantitySold is int
+        && request.resource.data.quantitySold >= resource.data.quantitySold
+        && request.resource.data.quantitySold <= request.resource.data.quantityTotal
+        && request.resource.data.capacity == request.resource.data.quantityTotal - request.resource.data.quantitySold
+        && request.resource.data.quantitySold - resource.data.quantitySold <= 10;
+      allow delete: if ownsEvent();
+    }
+  }
+}

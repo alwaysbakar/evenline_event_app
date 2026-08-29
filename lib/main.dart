@@ -70,7 +70,10 @@ class EvenlineApp extends StatelessWidget {
         path: '/favorites',
         builder: (_, _) => FavoritesScreen(store: store),
       ),
-      GoRoute(path: '/following', builder: (_, _) => const FollowingScreen()),
+      GoRoute(
+        path: '/following',
+        builder: (_, _) => FollowingScreen(store: store),
+      ),
       GoRoute(
         path: '/follow-organizer',
         builder: (_, _) => const FollowOrganizerScreen(),
