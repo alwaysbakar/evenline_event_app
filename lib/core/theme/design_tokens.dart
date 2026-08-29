@@ -32,6 +32,9 @@ abstract final class AppDimensions {
   static const bottomNavigationHeight = 70.0;
   static const compactThumbnail = 58.0;
   static const popularCardWidth = 188.0;
+  static const upcomingCardHeight = 92.0;
+  static const popularCardHeight = 246.0;
+  static const popularArtworkHeight = 106.0;
 }
 
 abstract final class AppTextStyles {

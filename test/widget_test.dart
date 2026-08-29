@@ -22,7 +22,7 @@ void main() {
     await tester.tap(find.text('Start exploring'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Featured events'), findsOneWidget);
+    expect(find.text('Upcoming Events'), findsOneWidget);
     expect(preferences.getBool(onboardingKey), isTrue);
   });
 }
